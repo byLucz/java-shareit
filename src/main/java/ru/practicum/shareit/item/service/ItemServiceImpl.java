@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repo.BookingRepository;
+import ru.practicum.shareit.exceptions.CommentServiceException;
 import ru.practicum.shareit.exceptions.ItemServiceException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -107,9 +108,9 @@ public class ItemServiceImpl implements ItemService {
             throw new ItemServiceException("Текст отзыва не может быть пустым");
         }
 
-        boolean hasBooking = bookingRepository.findFirst1ByItemIdAndBookerIdAndEndDateBefore(itemId, userId, LocalDateTime.now()).isPresent();
+        boolean hasBooking = bookingRepository.findFirst1ByItemIdAndBookerIdAndEndIsBefore(itemId, userId, LocalDateTime.now()).isPresent();
         if (!hasBooking) {
-            throw new ItemServiceException("Нельзя оставить отзыв без использования");
+            throw new CommentServiceException("Нельзя оставить отзыв без использования");
         }
 
         Comment comment = CommentMapper.toComment(commentDto, user, item);
