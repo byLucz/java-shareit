@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -27,15 +28,8 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         return UserMapper.toUserDto(user);
     }
-
-    @Override
-    public UserValidDto getUser(Integer userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        return UserMapper.toUserDto(user);
-    }
-
     @Transactional(readOnly = true)
+    @Override
     public User getUserById(Integer userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));

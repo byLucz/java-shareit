@@ -10,8 +10,6 @@ public interface UserService {
 
     UserValidDto createUser(UserValidDto userValidDto);
 
-    UserValidDto getUser(Integer userId);
-
     User getUserById(Integer userId);
 
     UserValidDto updateUser(Integer userId, UserDto userDto);
