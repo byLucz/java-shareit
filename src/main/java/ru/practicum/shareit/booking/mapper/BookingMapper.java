@@ -12,8 +12,8 @@ import ru.practicum.shareit.user.model.User;
 public class BookingMapper {
     public Booking toBooking(BookingDto bookingInput, User user, Item item, BookingStatus status) {
         Booking booking = new Booking();
-        booking.setStartDate(bookingInput.getStart());
-        booking.setEndDate(bookingInput.getEnd());
+        booking.setStart(bookingInput.getStart());
+        booking.setEnd(bookingInput.getEnd());
         booking.setItem(item);
         booking.setBooker(user);
         booking.setStatus(status);
@@ -23,8 +23,8 @@ public class BookingMapper {
 
     public Booking toBooking(BookingRequestDto bookingInput, User user, Item item, BookingStatus status) {
         Booking booking = new Booking();
-        booking.setStartDate(bookingInput.getStartDate());
-        booking.setEndDate(bookingInput.getEndDate());
+        booking.setStart(bookingInput.getStart());
+        booking.setEnd(bookingInput.getEnd());
         booking.setItem(item);
         booking.setBooker(user);
         booking.setStatus(status);
@@ -36,8 +36,8 @@ public class BookingMapper {
         BookingDto bookingdto = new BookingDto();
         bookingdto.setId(booking.getId());
         bookingdto.setBookerId(booking.getBooker().getId());
-        bookingdto.setStart(booking.getStartDate());
-        bookingdto.setEnd(booking.getEndDate());
+        bookingdto.setStart(booking.getStart());
+        bookingdto.setEnd(booking.getEnd());
 
         return bookingdto;
     }
