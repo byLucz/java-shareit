@@ -79,6 +79,7 @@ public class ItemServiceImpl implements ItemService {
 
         return itemMapper.toItemDtoWithBookingAndComments(item, lastBooking, nextBooking, comments);
     }
+
     @Transactional(readOnly = true)
     public List<ItemDtoWBooking> getAllUserItems(Integer userId) {
         return itemRepository.findAllByOwnerId(userId).stream()

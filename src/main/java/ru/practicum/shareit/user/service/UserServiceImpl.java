@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         return UserMapper.toUserDto(user);
     }
+
     @Transactional(readOnly = true)
     @Override
     public UserValidDto getUserById(Integer userId) {
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         return UserMapper.toUserDto(user);
     }
+
     @Override
     public UserValidDto updateUser(Integer userId, UserDto userDto) {
         User user = userRepository.findById(userId)
