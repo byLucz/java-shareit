@@ -50,10 +50,19 @@ public class ExHandler {
         );
     }
 
+    @ExceptionHandler(CommentServiceException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleCommentServiceException(final RuntimeException e) {
+        log.debug("Получен статус 500 Internal Server Exception {}", e.getMessage(), e);
+        return Map.of(
+                "ERROR", "Возникло исключение с комментариями", "ErrorMessage", e.getMessage()
+        );
+    }
+
     @ExceptionHandler(BookingServiceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleBookingServiceException(final RuntimeException e) {
-        log.debug("Получен статус 400 Bad request {}", e.getMessage(), e);
+        log.debug("Получен статус 500 Internal Server Exception {}", e.getMessage(), e);
         return Map.of(
                 "ERROR", "Возникло исключение при бронировании", "ErrorMessage", e.getMessage()
         );
