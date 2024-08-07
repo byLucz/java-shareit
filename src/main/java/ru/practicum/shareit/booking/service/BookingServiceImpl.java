@@ -14,6 +14,7 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repo.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,8 @@ import java.util.LinkedList;
 @RequiredArgsConstructor
 @Service
 public class BookingServiceImpl implements BookingService {
+
+    private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final ItemService itemService;
     private final UserService userService;
@@ -36,7 +39,8 @@ public class BookingServiceImpl implements BookingService {
         if (item.getOwner().getId().equals(userId))
             throw new NotFoundException("Владелец не может забронировать свою вещь");
 
-        User booker = userService.getUserById(userId);
+        User booker = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Booking booking = mapper.toBooking(bookingInput, booker, item, BookingStatus.WAITING);
         return bookingRepository.save(booking);
     }
@@ -52,7 +56,8 @@ public class BookingServiceImpl implements BookingService {
         if (!booking.getStatus().equals(BookingStatus.WAITING))
             throw new BookingServiceException("Заявка уже рассмотрена");
 
-        User user = userService.getUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BookingServiceException("У пользователя нет бронирований"));
         if (booking.getItem().getOwner().getId() != user.getId())
             if (booking.getBooker().getId() != user.getId())
                 throw new BookingServiceException("У вас нет доступа к бронированию");
@@ -64,7 +69,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     public Booking getBookingById(int userId, int bookingId) {
-        User user = userService.getUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронирование с id " + bookingId + " не найдено"));
 
@@ -75,7 +81,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     public LinkedList<Booking> getBookingByUser(int userId, String stateIn) {
-        User user = userService.getUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         LinkedList<Booking> bookingLinkedList = new LinkedList<>();
         if (BookingState.findByName(stateIn) == null)
             throw new RuntimeException("Unknown state: " + stateIn);
@@ -102,7 +109,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     public LinkedList<Booking> getBookingByUserItems(int userId, String stateIn) {
-        User user = userService.getUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         LinkedList<Booking> bookingLinkedList = new LinkedList<>();
         if (BookingState.findByName(stateIn) == null)
             throw new RuntimeException("Unknown state: " + stateIn);
