@@ -19,17 +19,20 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repo.CommentRepository;
 import ru.practicum.shareit.item.repo.ItemRepository;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repo.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
+    private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final UserService userService;
     private final ItemMapper itemMapper;
@@ -38,7 +41,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public ItemDto createItem(ItemDto itemDto, Integer userId) {
-        User user = userService.getUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Item item = itemMapper.toItem(itemDto, user);
         item = itemRepository.save(item);
         return itemMapper.toItemDto(item);
@@ -59,7 +63,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     public ItemDtoWBookingAndComments getItemByIdAndUserId(Integer userId, Integer itemId) {
-        User user = userService.getUserById(userId);
+        Optional<User> user = userRepository.findById(userId);
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с айди " + itemId + " не найдена"));
 
@@ -101,7 +105,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public CommentDto postComment(CommentDto commentDto, Integer userId, Integer itemId) {
-        User user = userService.getUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Item item = getItemById(itemId);
 
         if (commentDto.getText().isBlank()) {

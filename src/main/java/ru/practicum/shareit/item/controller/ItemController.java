@@ -23,7 +23,7 @@ public class ItemController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") Integer userId, @Valid @RequestBody ItemDto itemDto) {
-        log.info("POST /items with userId = {} {}", userId, itemDto);
+        log.info("POST /items {}", itemDto);
         return itemService.createItem(itemDto, userId);
     }
 
@@ -37,7 +37,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public ItemDtoWBookingAndComments getItemByIdAndUserId(@RequestHeader("X-Sharer-User-Id") Integer userId, @PathVariable Integer itemId) {
-        log.info("GET /items/{} {}", itemId, userId);
+        log.info("GET /items/{}", itemId);
         return itemService.getItemByIdAndUserId(userId, itemId);
     }
 
