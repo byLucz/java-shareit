@@ -58,10 +58,13 @@ public class BookingServiceImpl implements BookingService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BookingServiceException("У пользователя нет бронирований"));
-        if (booking.getItem().getOwner().getId() != user.getId())
-            if (booking.getBooker().getId() != user.getId())
+
+        if (!booking.getItem().getOwner().getId().equals(user.getId())) {
+            if (!booking.getBooker().getId().equals(user.getId()))
                 throw new BookingServiceException("У вас нет доступа к бронированию");
-            else throw new NotFoundException("Вы не владелец вещи");
+            else
+                throw new NotFoundException("Вы не владелец вещи");
+        }
 
         booking.setStatus(approved.equalsIgnoreCase("true") ? BookingStatus.APPROVED : BookingStatus.REJECTED);
         return bookingRepository.save(booking);
