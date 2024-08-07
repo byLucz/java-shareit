@@ -30,9 +30,10 @@ public class UserServiceImpl implements UserService {
     }
     @Transactional(readOnly = true)
     @Override
-    public User getUserById(Integer userId) {
-        return userRepository.findById(userId)
+    public UserValidDto getUserById(Integer userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        return UserMapper.toUserDto(user);
     }
     @Override
     public UserValidDto updateUser(Integer userId, UserDto userDto) {
