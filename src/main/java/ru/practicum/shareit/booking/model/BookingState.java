@@ -7,5 +7,11 @@ public enum BookingState {
     ALL,
     CURRENT,
     PAST,
-    FUTURE
+    FUTURE;
+    public static BookingState findByName(String name) {
+        for (BookingState state : values())
+            if (state.name().equalsIgnoreCase(name))
+                return state;
+        return null;
+    }
 }
