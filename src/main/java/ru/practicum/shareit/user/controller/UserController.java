@@ -26,7 +26,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserValidDto createUser(@RequestBody @Valid UserValidDto userValidDto) {
-        log.info("POST /users");
+        log.info("POST /users {}", userValidDto);
         return userService.createUser(userValidDto);
     }
 
@@ -34,7 +34,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserValidDto getUser(@PathVariable Integer userId) {
         log.info("GET /users/{}", userId);
-        return userService.getUser(userId);
+        return userService.getUserById(userId);
     }
 
     @PatchMapping("/{userId}")

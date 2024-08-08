@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
 
-@RestControllerAdvice(basePackageClasses = {ru.practicum.shareit.item.controller.ItemController.class, ru.practicum.shareit.user.controller.UserController.class})
+@RestControllerAdvice(basePackageClasses = {ru.practicum.shareit.item.controller.ItemController.class, ru.practicum.shareit.user.controller.UserController.class, ru.practicum.shareit.booking.controller.BookingController.class})
 
 @Slf4j
 
@@ -49,6 +49,25 @@ public class ExHandler {
                 "ERROR", "Возникло пользовательское исключение", "ErrorMessage", e.getMessage()
         );
     }
+
+    @ExceptionHandler(CommentServiceException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleCommentServiceException(final RuntimeException e) {
+        log.debug("Получен статус 500 Internal Server Exception {}", e.getMessage(), e);
+        return Map.of(
+                "ERROR", "Возникло исключение с комментариями", "ErrorMessage", e.getMessage()
+        );
+    }
+
+    @ExceptionHandler(BookingServiceException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleBookingServiceException(final RuntimeException e) {
+        log.debug("Получен статус 500 Internal Server Exception {}", e.getMessage(), e);
+        return Map.of(
+                "ERROR", "Возникло исключение при бронировании", "ErrorMessage", e.getMessage()
+        );
+    }
+
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
