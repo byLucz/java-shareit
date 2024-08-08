@@ -8,9 +8,12 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
+
+    List<Booking> findAllByItemIdIn(List<Integer> itemIds);
 
     @Query("SELECT b FROM Booking b WHERE b.item.id = :itemId AND b.start < CURRENT_TIMESTAMP ORDER BY b.start DESC")
     Optional<Booking> findLastBookingByItemId(Integer itemId);

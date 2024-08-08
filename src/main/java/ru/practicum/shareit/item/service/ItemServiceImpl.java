@@ -25,6 +25,7 @@ import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -82,12 +83,21 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     public List<ItemDtoWBooking> getAllUserItems(Integer userId) {
-        return itemRepository.findAllByOwnerId(userId).stream()
-                .map(item -> {
-                    var lastBooking = bookingRepository.findLastBookingByItemId(item.getId());
-                    var nextBooking = bookingRepository.findNextBookingByItemId(item.getId());
-                    return itemMapper.toItemDtoWBooking(item, lastBooking.orElse(null), nextBooking.orElse(null));
-                })
+        List<Item> items = itemRepository.findAllByOwnerId(userId);
+        List<Integer> itemIds = items.stream().map(Item::getId).collect(Collectors.toList());
+
+        List<Booking> bookings = bookingRepository.findAllByItemIdIn(itemIds);
+
+        Map<Integer, Booking> lastBookings = bookings.stream()
+                .filter(booking -> booking.getEnd().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toMap(booking -> booking.getItem().getId(), booking -> booking, (existing, replacement) -> existing.getEnd().isAfter(replacement.getEnd()) ? existing : replacement));
+
+        Map<Integer, Booking> nextBookings = bookings.stream()
+                .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toMap(booking -> booking.getItem().getId(), booking -> booking, (existing, replacement) -> existing.getStart().isBefore(replacement.getStart()) ? existing : replacement));
+
+        return items.stream()
+                .map(item -> itemMapper.toItemDtoWBooking(item, lastBookings.get(item.getId()), nextBookings.get(item.getId())))
                 .collect(Collectors.toList());
     }
 
