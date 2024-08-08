@@ -43,6 +43,7 @@ public class BookingServiceImpl implements BookingService {
 
         User booker = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+
         Booking booking = mapper.toBooking(bookingInput, booker, item, BookingStatus.WAITING);
         bookingRepository.save(booking);
         return mapper.toBookingDto(booking);
@@ -61,7 +62,6 @@ public class BookingServiceImpl implements BookingService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BookingServiceException("У пользователя нет бронирований"));
-
         if (!booking.getItem().getOwner().getId().equals(user.getId())) {
             if (!booking.getBooker().getId().equals(user.getId()))
                 throw new BookingServiceException("У вас нет доступа к бронированию");
