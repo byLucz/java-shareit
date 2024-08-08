@@ -3,7 +3,6 @@ package ru.practicum.shareit.booking.repo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 
@@ -11,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.Optional;
 
-@Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     @Query("SELECT b FROM Booking b WHERE b.item.id = :itemId AND b.start < CURRENT_TIMESTAMP ORDER BY b.start DESC")

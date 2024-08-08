@@ -17,9 +17,10 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+
 public class ItemMapper {
 
-    private final BookingMapper bookingMapper = new BookingMapper();
+    private final BookingMapper bookingMapper;
 
     public Item toItem(ItemDto itemDto, User user) {
         Item item = new Item();
