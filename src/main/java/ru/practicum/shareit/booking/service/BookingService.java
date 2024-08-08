@@ -1,21 +1,21 @@
 package ru.practicum.shareit.booking.service;
 
 
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
-import ru.practicum.shareit.booking.model.Booking;
 
 import java.util.LinkedList;
 
 public interface BookingService {
-    Booking createBooking(int userId, BookingRequestDto bookingInput);
+    BookingDto createBooking(int userId, BookingRequestDto bookingInput);
 
-    Booking approveBooking(int userId, int bookingId, String approved);
+    BookingDto approveBooking(int userId, int bookingId, String approved);
 
-    Booking getBookingById(int userId, int bookingId);
+    BookingDto getBookingById(int userId, int bookingId);
 
-    LinkedList<Booking> getBookingByUser(int userId, String stateIn);
+    LinkedList<BookingDto> getBookingByUser(int userId, String stateIn);
 
-    LinkedList<Booking> getBookingByUserItems(int userId, String stateIn);
+    LinkedList<BookingDto> getBookingByUserItems(int userId, String stateIn);
 
     Boolean checkUserUsedItem(int userId, int itemId);
 }

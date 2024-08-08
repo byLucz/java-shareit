@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
@@ -19,6 +20,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -31,7 +33,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper mapper;
 
     @Transactional
-    public Booking createBooking(int userId, BookingRequestDto bookingInput) {
+    public BookingDto createBooking(int userId, BookingRequestDto bookingInput) {
         Item item = itemService.getItemById(bookingInput.getItemId());
         validateBookingDates(bookingInput.getStart(), bookingInput.getEnd());
         if (!item.getAvailable())
@@ -42,11 +44,12 @@ public class BookingServiceImpl implements BookingService {
         User booker = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Booking booking = mapper.toBooking(bookingInput, booker, item, BookingStatus.WAITING);
-        return bookingRepository.save(booking);
+        bookingRepository.save(booking);
+        return mapper.toBookingDto(booking);
     }
 
     @Transactional
-    public Booking approveBooking(int userId, int bookingId, String approved) {
+    public BookingDto approveBooking(int userId, int bookingId, String approved) {
         if (!(approved.equalsIgnoreCase("true")) && !(approved.equalsIgnoreCase("false")))
             throw new BookingServiceException("Неправильный параметр approved");
 
@@ -67,11 +70,12 @@ public class BookingServiceImpl implements BookingService {
         }
 
         booking.setStatus(approved.equalsIgnoreCase("true") ? BookingStatus.APPROVED : BookingStatus.REJECTED);
-        return bookingRepository.save(booking);
+        bookingRepository.save(booking);
+        return mapper.toBookingDto(booking);
     }
 
     @Transactional(readOnly = true)
-    public Booking getBookingById(int userId, int bookingId) {
+    public BookingDto getBookingById(int userId, int bookingId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Booking booking = bookingRepository.findById(bookingId)
@@ -80,10 +84,10 @@ public class BookingServiceImpl implements BookingService {
         if (!booking.getBooker().getId().equals(userId) && !booking.getItem().getOwner().getId().equals(userId))
             throw new NotFoundException("Пользователь не является владельцем вещи или бронирования");
 
-        return booking;
+        return mapper.toBookingDto(booking);
     }
 
-    public LinkedList<Booking> getBookingByUser(int userId, String stateIn) {
+    public LinkedList<BookingDto> getBookingByUser(int userId, String stateIn) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         LinkedList<Booking> bookingLinkedList = new LinkedList<>();
@@ -108,10 +112,12 @@ public class BookingServiceImpl implements BookingService {
                 bookingLinkedList = bookingRepository.getAllCurrentUserBookings(userId, LocalDateTime.now());
                 break;
         }
-        return bookingLinkedList;
+        return bookingLinkedList.stream()
+                .map(mapper::toBookingDto)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    public LinkedList<Booking> getBookingByUserItems(int userId, String stateIn) {
+    public LinkedList<BookingDto> getBookingByUserItems(int userId, String stateIn) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         LinkedList<Booking> bookingLinkedList = new LinkedList<>();
@@ -136,7 +142,9 @@ public class BookingServiceImpl implements BookingService {
                 bookingLinkedList = bookingRepository.getCurrentUserBookings(userId, LocalDateTime.now());
                 break;
         }
-        return bookingLinkedList;
+        return bookingLinkedList.stream()
+                .map(mapper::toBookingDto)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     private void validateBookingDates(LocalDateTime start, LocalDateTime end) {
