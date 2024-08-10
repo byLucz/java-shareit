@@ -18,7 +18,6 @@ import ru.practicum.shareit.item.repo.CommentRepository;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repo.UserRepository;
-import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.dto.ItemDtoWBookingAndComments;
 import ru.practicum.shareit.item.repo.ItemRepository;
