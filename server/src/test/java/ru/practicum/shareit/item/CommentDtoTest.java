@@ -34,8 +34,7 @@ class CommentDtoTest {
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(commentDto.getId());
         assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo(commentDto.getText());
         assertThat(result).extractingJsonPathStringValue("$.authorName").isEqualTo(commentDto.getAuthorName());
-        assertThat(result).extractingJsonPathStringValue("$.created")
-                .isEqualTo(commentDto.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        assertThat(result).extractingJsonPathStringValue("$.created").isEqualTo(commentDto.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }
 
     @Test

@@ -12,6 +12,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDtoWBookingAndComments;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,12 +47,12 @@ public class ItemDtoWBookingAndCommentsTest {
         assertThat(result).extractingJsonPathBooleanValue("$.available").isEqualTo(itemDto.getAvailable());
 
         assertThat(result).extractingJsonPathNumberValue("$.lastBooking.id").isEqualTo(lastBooking.getId());
-        assertThat(result).extractingJsonPathStringValue("$.lastBooking.start").isEqualTo(lastBooking.getStart().toString());
-        assertThat(result).extractingJsonPathStringValue("$.lastBooking.end").isEqualTo(lastBooking.getEnd().toString());
+        assertThat(result).extractingJsonPathStringValue("$.lastBooking.start").isEqualTo(lastBooking.getStart().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        assertThat(result).extractingJsonPathStringValue("$.lastBooking.end").isEqualTo(lastBooking.getEnd().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         assertThat(result).extractingJsonPathNumberValue("$.nextBooking.id").isEqualTo(nextBooking.getId());
-        assertThat(result).extractingJsonPathStringValue("$.nextBooking.start").isEqualTo(nextBooking.getStart().toString());
-        assertThat(result).extractingJsonPathStringValue("$.nextBooking.end").isEqualTo(nextBooking.getEnd().toString());
+        assertThat(result).extractingJsonPathStringValue("$.nextBooking.start").isEqualTo(nextBooking.getStart().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        assertThat(result).extractingJsonPathStringValue("$.nextBooking.end").isEqualTo(nextBooking.getEnd().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         assertThat(result).extractingJsonPathNumberValue("$.comments[0].id").isEqualTo(comment.getId());
         assertThat(result).extractingJsonPathStringValue("$.comments[0].text").isEqualTo(comment.getText());
