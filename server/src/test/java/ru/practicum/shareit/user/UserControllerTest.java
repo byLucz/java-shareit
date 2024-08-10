@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserValidDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
@@ -29,11 +28,11 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    private UserValidDto userValidDto;
+    private UserDto userValidDto;
 
     @BeforeEach
     void setUp() {
-        userValidDto = new UserValidDto();
+        userValidDto = new UserDto();
         userValidDto.setId(1);
         userValidDto.setName("Test User");
         userValidDto.setEmail("test@example.com");
@@ -41,7 +40,7 @@ class UserControllerTest {
 
     @Test
     void createUser() throws Exception {
-        when(userService.createUser(any(UserValidDto.class))).thenReturn(userValidDto);
+        when(userService.createUser(any(UserDto.class))).thenReturn(userValidDto);
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -51,7 +50,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").value(userValidDto.getName()))
                 .andExpect(jsonPath("$.email").value(userValidDto.getEmail()));
 
-        verify(userService, times(1)).createUser(any(UserValidDto.class));
+        verify(userService, times(1)).createUser(any(UserDto.class));
     }
 
     @Test
@@ -73,7 +72,7 @@ class UserControllerTest {
         userDto.setName("Updated Name");
         userDto.setEmail("updated@example.com");
 
-        UserValidDto updatedUserDto = new UserValidDto();
+        UserDto updatedUserDto = new UserDto();
         updatedUserDto.setId(1);
         updatedUserDto.setName("Updated Name");
         updatedUserDto.setEmail("updated@example.com");

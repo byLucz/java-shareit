@@ -7,7 +7,6 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.UserServiceException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserValidDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.repo.UserRepository;
 
@@ -24,22 +23,22 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserValidDto createUser(UserValidDto userValidDto) {
-        User user = UserMapper.toUser(userValidDto);
+    public UserDto createUser(UserDto userDto) {
+        User user = UserMapper.toUser(userDto);
         user = userRepository.save(user);
         return UserMapper.toUserDto(user);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public UserValidDto getUserById(Integer userId) {
+    public UserDto getUserById(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         return UserMapper.toUserDto(user);
     }
 
     @Override
-    public UserValidDto updateUser(Integer userId, UserDto userDto) {
+    public UserDto updateUser(Integer userId, UserDto userDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
@@ -64,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserValidDto> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());

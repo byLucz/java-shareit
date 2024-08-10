@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserValidDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repo.UserRepository;
 import ru.practicum.shareit.user.service.UserServiceImpl;
@@ -37,9 +36,9 @@ class UserServiceImplTest {
 
     @Test
     void testCreateUser() {
-        UserValidDto userValidDto = new UserValidDto(null, "Jane Doe", "jane.doe@example.com");
+        UserDto userValidDto = new UserDto(null, "Jane Doe", "jane.doe@example.com");
 
-        UserValidDto createdUser = userService.createUser(userValidDto);
+        UserDto createdUser = userService.createUser(userValidDto);
 
         assertNotNull(createdUser);
         assertEquals(userValidDto.getName(), createdUser.getName());
@@ -50,7 +49,7 @@ class UserServiceImplTest {
 
     @Test
     void testGetUserById() {
-        UserValidDto foundUser = userService.getUserById(user.getId());
+        UserDto foundUser = userService.getUserById(user.getId());
 
         assertNotNull(foundUser);
         assertEquals(user.getName(), foundUser.getName());
@@ -61,7 +60,7 @@ class UserServiceImplTest {
     void testUpdateUser() {
         UserDto userDto = new UserDto(user.getId(),"John Updated", "john.updated@example.com");
 
-        UserValidDto updatedUser = userService.updateUser(user.getId(), userDto);
+        UserDto updatedUser = userService.updateUser(user.getId(), userDto);
 
         assertNotNull(updatedUser);
         assertEquals(userDto.getName(), updatedUser.getName());
@@ -82,7 +81,7 @@ class UserServiceImplTest {
 
     @Test
     void testGetAllUsers() {
-        List<UserValidDto> users = userService.getAllUsers();
+        List<UserDto> users = userService.getAllUsers();
 
         assertNotNull(users);
         assertEquals(1, users.size());

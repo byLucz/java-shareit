@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserValidDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
@@ -19,21 +18,21 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserValidDto createUser(@RequestBody UserValidDto userValidDto) {
+    public UserDto createUser(@RequestBody UserDto userValidDto) {
         log.info("POST /users {}", userValidDto);
         return userService.createUser(userValidDto);
     }
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserValidDto getUser(@PathVariable Integer userId) {
+    public UserDto getUser(@PathVariable Integer userId) {
         log.info("GET /users/{}", userId);
         return userService.getUserById(userId);
     }
 
     @PatchMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserValidDto updateUser(@PathVariable Integer userId, @RequestBody UserDto userDto) {
+    public UserDto updateUser(@PathVariable Integer userId, @RequestBody UserDto userDto) {
         log.info("PATCH /users/", userId, userDto);
         return userService.updateUser(userId, userDto);
     }
@@ -47,7 +46,7 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserValidDto> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         log.info("GET /users");
         return userService.getAllUsers();
     }
