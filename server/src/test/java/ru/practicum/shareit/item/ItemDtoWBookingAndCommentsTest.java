@@ -57,7 +57,7 @@ public class ItemDtoWBookingAndCommentsTest {
         assertThat(result).extractingJsonPathNumberValue("$.comments[0].id").isEqualTo(comment.getId());
         assertThat(result).extractingJsonPathStringValue("$.comments[0].text").isEqualTo(comment.getText());
         assertThat(result).extractingJsonPathStringValue("$.comments[0].authorName").isEqualTo(comment.getAuthorName());
-        assertThat(result).extractingJsonPathStringValue("$.comments[0].created").isEqualTo(comment.getCreated().toString());
+        assertThat(result).extractingJsonPathStringValue("$.comments[0].created").isEqualTo(comment.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }
 
     @Test
