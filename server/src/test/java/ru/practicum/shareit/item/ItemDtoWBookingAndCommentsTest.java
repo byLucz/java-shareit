@@ -62,34 +62,11 @@ public class ItemDtoWBookingAndCommentsTest {
 
     @Test
     void testDeserialize() throws Exception {
-        String content = """
-            {
-                "id": 1,
-                "name": "ItemName",
-                "description": "ItemDescription",
-                "available": true,
-                "lastBooking": {
-                    "id": 1,
-                    "start": "2024-08-10T12:00:00",
-                    "end": "2024-08-11T12:00:00",
-                    "status": "APPROVED"
-                },
-                "nextBooking": {
-                    "id": 2,
-                    "start": "2024-08-12T12:00:00",
-                    "end": "2024-08-13T12:00:00",
-                    "status": "APPROVED"
-                },
-                "comments": [
-                    {
-                        "id": 1,
-                        "text": "Great item!",
-                        "authorName": "User1",
-                        "created": "2024-08-10T12:00:00"
-                    }
-                ]
-            }
-            """;
+        String content = "{ \"id\": 1, \"name\": \"ItemName\", \"description\": \"ItemDescription\", " +
+                "\"available\": true, \"lastBooking\": { \"id\": 1, \"start\": \"2024-08-10T12:00:00\", \"end\": " +
+                "\"2024-08-11T12:00:00\", \"status\": \"APPROVED\" }, \"nextBooking\": { \"id\": 2, \"start\": " +
+                "\"2024-08-12T12:00:00\", \"end\": \"2024-08-13T12:00:00\", \"status\": \"APPROVED\" }, \"comments\": " +
+                "[ { \"id\": 1, \"text\": \"Great item!\", \"authorName\": \"User1\", \"created\": \"2024-08-10T12:00:00\" } ] }";
 
         ObjectContent<ItemDtoWBookingAndComments> result = json.parse(content);
 
