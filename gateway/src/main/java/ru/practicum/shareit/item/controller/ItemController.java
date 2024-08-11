@@ -11,6 +11,8 @@ import ru.practicum.shareit.item.ItemClient;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
+import java.util.Collections;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -50,6 +52,10 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> searchItems(@RequestParam String text) {
         log.info("GET /items/search?text={}", text);
+        if (text == null || text.trim().isEmpty()) {
+            log.info("Поисковый запрос пуст");
+            return ResponseEntity.ok(Collections.emptyList());
+        }
         return itemService.searchItems(text);
     }
 
